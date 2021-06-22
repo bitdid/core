@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Bitdid.Core.Models
-{
+namespace Bitdid.Core.Models {
 
+    [Table("Bitdid.Category")]
     public class Category {
 
         public Category() {
@@ -27,5 +30,22 @@ namespace Bitdid.Core.Models
         public ICollection<Currency> Currencies { get; set; }
 
         #endregion
+    }
+
+    public class CategoryConfiguration : IEntityTypeConfiguration<Category> {
+
+        public void Configure(EntityTypeBuilder<Category> builder) {
+            builder.HasKey(_ => _.Id);
+            
+            builder.Property(_ => _.Title)
+                .HasMaxLength(255)
+                .IsUnicode()
+                .IsRequired();
+
+            builder.Property(_ => _.Slug)
+                .HasMaxLength(500)
+                .IsUnicode()
+                .IsRequired();
+        }
     }
 }

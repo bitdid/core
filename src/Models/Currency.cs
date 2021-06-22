@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bitdid.Core.Models {
 
+    [Table("Bitdid.Currency")]
     public class Currency {
 
         public Currency() {
             Metadata = new HashSet<CurrencyMetadata>();
             CurrencyTags = new HashSet<CurrencyTag>();
+            BaseCurrencyMarketPairs = new HashSet<MarketPair>();
+            VsCurrencyMarketPairs = new HashSet<MarketPair>();
         }
 
         #region Properties
@@ -59,7 +65,63 @@ namespace Bitdid.Core.Models {
 
         public ICollection<CurrencyMetadata> Metadata { get; set; }
 
+        public ICollection<MarketPair> BaseCurrencyMarketPairs { get; set; }
+
+        public ICollection<MarketPair> VsCurrencyMarketPairs { get; set; }
 
         #endregion
     }
+
+    public class CurrencyConfiguration : IEntityTypeConfiguration<Currency> {
+
+        public void Configure(EntityTypeBuilder<Currency> builder) {
+            builder.HasKey(_ => _.Id);
+
+            builder.Property(_ => _.AltTitle)
+                .HasMaxLength(255)
+                .IsUnicode();
+
+            builder.Property(_ => _.Description)
+                .HasMaxLength(1000)
+                .IsUnicode();
+
+            builder.Property(_ => _.DocsUrl)
+                .HasMaxLength(1000)
+                .IsUnicode();
+
+            builder.Property(_ => _.Logo)
+                .HasMaxLength(1000)
+                .IsUnicode();
+
+            builder.Property(_ => _.Slug)
+                .HasMaxLength(500)
+                .IsUnicode()
+                .IsRequired();
+
+            builder.Property(_ => _.SourceCodeUrl)
+                .HasMaxLength(500)
+                .IsUnicode();
+
+            builder.Property(_ => _.Symbol)
+                .HasMaxLength(50)
+                .IsUnicode()
+                .IsRequired();
+
+            builder.Property(_ => _.Title)
+                .HasMaxLength(255)
+                .IsUnicode()
+                .IsRequired();
+
+            builder.Property(_ => _.WebsiteUrl)
+                .HasMaxLength(500)
+                .IsUnicode();
+
+            builder.HasOne(_ => _.Category)
+                .WithMany(__ => __.Currencies)
+                .HasForeignKey(_ => _.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+        }
+    }
+
 }

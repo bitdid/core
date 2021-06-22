@@ -1,10 +1,13 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bitdid.Core.Models {
 
+    [Table("Bitdid.Currency_Metadata")]
     public class CurrencyMetadata {
         
-
         public CurrencyMetadata() {
 
         }
@@ -37,5 +40,17 @@ namespace Bitdid.Core.Models {
         public Currency Currency { get; set; }
 
         #endregion
+    }
+
+    public class CurrencyMetadataConfiguration : IEntityTypeConfiguration<CurrencyMetadata> {
+
+        public void Configure(EntityTypeBuilder<CurrencyMetadata> builder) {
+            builder.HasKey(_ => _.Id);
+
+            builder.HasOne(_ => _.Currency)
+                .WithMany(__ => __.Metadata)
+                .HasForeignKey(_ => _.CurrencyId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

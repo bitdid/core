@@ -1,7 +1,11 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bitdid.Core.Models {
 
+    [Table("Bitdid.Currency_Price")]
     public class CurrencyPrice {
 
         public CurrencyPrice() {
@@ -40,5 +44,22 @@ namespace Bitdid.Core.Models {
 
 
         #endregion
+    }
+
+    public class CurrencyPriceConfiguration : IEntityTypeConfiguration<CurrencyPrice> {
+
+        public void Configure(EntityTypeBuilder<CurrencyPrice> builder) {
+            builder.HasKey(_ => _.Id);
+
+            builder.HasOne(_ => _.MarketPair)
+                .WithMany(__ => __.Prices)
+                .HasForeignKey(_ => _.MarketPairId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(_ => _.Exchange)
+                .WithMany(__ => __.Prices)
+                .HasForeignKey(_ => _.ExchangeId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
