@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bitdid.Core.Models
 {
@@ -11,9 +12,15 @@ namespace Bitdid.Core.Models
     [Table("Bitdid.MarketPair_Historical")]
     public class MarketPairHistorical {
 
+        public MarketPairHistorical() { }
+
+        #region Properties
+
         public long Id { get; set; }
 
         public int? ExchangeId { get; set; }
+
+        public long MarketPairId { get; set; }
 
         public DateTime TimeOpen { get; set; }
 
@@ -34,5 +41,32 @@ namespace Bitdid.Core.Models
         public decimal Volume { get; set; }
 
         public decimal MarketCap { get; set; }
+
+        #endregion
+
+        #region Navigations
+
+        public Exchange Exchange { get; set; }
+
+        public MarketPair MarketPair { get; set; }
+
+        #endregion
+    }
+
+    public class MarketPairHistoricalConfiguration : IEntityTypeConfiguration<MarketPairHistorical> {
+
+        public void Configure(EntityTypeBuilder<MarketPairHistorical> builder) {
+            builder.HasKey(_ => _.Id);
+
+            builder.HasOne(_ => _.Exchange)
+                .WithMany(__ => __.MarketPairHistorical)
+                .HasForeignKey(_ => _.ExchangeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(_ => _.MarketPair)
+                .WithMany(__ => __.MarketPairHistorical)
+                .HasForeignKey(_ => _.MarketPairId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace Bitdid.Core.Models {
         public Exchange() {
             ExchangeMarketPairs = new HashSet<ExchangeMarketPair>();
             Prices = new HashSet<CurrencyPrice>();
+            MarketPairHistorical = new HashSet<MarketPairHistorical>();
         }
 
         #region Properties
@@ -35,6 +36,8 @@ namespace Bitdid.Core.Models {
         public ICollection<ExchangeMarketPair> ExchangeMarketPairs { get; set; }
 
         public ICollection<CurrencyPrice> Prices { get; set; }
+
+        public ICollection<MarketPairHistorical> MarketPairHistorical { get; set; }
 
         #endregion
     }

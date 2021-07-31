@@ -8,9 +8,7 @@ namespace Bitdid.Core.Models {
     [Table("Bitdid.Exchange_MarketPairs")]
     public class ExchangeMarketPair {
 
-        public ExchangeMarketPair() {
-
-        }
+        public ExchangeMarketPair() { }
 
         #region Properties
 
@@ -23,6 +21,7 @@ namespace Bitdid.Core.Models {
         public DateTime? ListDate { get; set; }
 
         #endregion
+
 
         #region Navigations
 
